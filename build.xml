@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project name="Pedx" basedir="." default="publish" xmlns:ivy="antlib:org.apache.ivy.ant">
+	<description>
+		Lightweight Java Database Framework
+    </description>
+    <property name="src.dir" value="${basedir}/src" />
+    <property name="bin.dir" value="${basedir}/bin" />
+    <property name="dist.dir" value="${basedir}/release" />
+    <property name="ivy.lib.dir" value="${basedir}/lib" />
+	<property name="ivy.settings.file" value="C:\\Users\\kurtzhi\\.ivy2\\ivysettings.xml"/>
+	<property name="ivy.deliver.revision" value="1.1" />
+    <property name="artifact" value="pedx" />
+    <property name="artifact-runtime" value="pedx-test" />
+    <property name="jar" value="${dist.dir}/${artifact}-${ivy.deliver.revision}.jar" />
+    <property name="jar-runtime" value="${dist.dir}/${artifact-runtime}-${ivy.deliver.revision}.jar" />
+
+    <path id="lib.path.id">
+        <fileset dir="${ivy.lib.dir}"/>
+    </path>
+    
+    <path id="run.path.id">
+        <path path="${bin.dir}"/>
+        <path refid="lib.path.id" />
+    </path>
+	
+    <target name="init">
+        <!--<ivy:resolve conf="default"/>-->
+        <!--<ivy:resolve conf="runtime"/>-->
+        <mkdir dir="${bin.dir}"/>
+        <mkdir dir="${dist.dir}"/>
+        <ivy:retrieve/>
+    </target>
+
+    <target name="compile" depends="init">
+        <javac srcdir="${src.dir}" destdir="${bin.dir}" 
+            fork="true" includeantruntime="false" 
+            encoding="utf-8" classpathref="lib.path.id" />
+    </target>
+	
+    <target name="deliver" depends="compile">
+    	<jar destfile="${jar-runtime}" basedir="${bin.dir}"></jar>
+        <delete dir="${bin.dir}/com/kurtzhi/storage"></delete>
+    	<jar destfile="${jar}" basedir="${bin.dir}"></jar>
+    	<ivy:deliver deliverpattern="${dist.dir}/[artifact]-[revision].[ext]"/>
+    </target>
+
+    <target name="publish" depends="deliver">
+        <ivy:publish resolver="kurt-share" overwrite="true" 
+                     artifactspattern="${dist.dir}/[artifact]-[revision].[ext]" />
+    </target>
+
+    <target name="run" depends="compile">
+        <java classname="com.kurtzhi.storage.test.Helper" 
+        	classpathref="run.path.id" fork="true" />
+    </target>
+
+    <target name="clean">
+        <delete dir="${bin.dir}"/>
+        <delete dir="${dist.dir}"/>
+        <delete dir="${ivy.lib.dir}"/>
+    </target>
+</project>

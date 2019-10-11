@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ivy-module version="2.3"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+ 	<info organisation="com.kurtzhi" module="pedx" status="release"/>
+ 		
+	<configurations defaultconf="default">
+        <conf name="default"/>
+        <conf name="runtime"/>
+	</configurations>
+	
+	<publications>
+        <artifact name="${artifact}" type="jar" conf="default"/>
+        <artifact name="${artifact-runtime}" type="jar" conf="runtime"/>
+	</publications>
+	
+	<dependencies>
+       <dependency org="log4j" name="log4j" rev="1.2.17" conf="*->default"/>
+       <dependency org="mysql" name="mysql-connector-java" rev="5.1.24" conf="runtime->default"/>
+	</dependencies>
+</ivy-module>
